@@ -1,0 +1,150 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(E_ALL & ~E_NOTICE);
+
+// Get Config
+$params = array();
+for ($i = 1; $i < count($argv); $i++)
+{
+	list ($key, $val) = explode('=', substr($argv[$i], 2));
+	$params[$key] = $val;
+}
+
+// Get config file
+if ( ! isset($params['config']))
+{
+	exit('No config file');
+}
+$config = array();
+if ( ! file_exists($params['config']))
+{
+	exit('Config file not found');
+}
+$file = file_get_contents($params['config']);
+$config = json_decode($file, true);
+
+// Output function
+function out ($input, $line)
+{
+	global $config;
+	$line = trim($line);
+	$data = isset($input['data']) ? $input['data'] : array();
+	$data['source'] = $input['source'];
+	foreach ($input['filters'] as $filter)
+	{
+		$data = $data + filter($line, $filter);
+	}
+	foreach ($config['output'] as $output)
+	{
+		$ch = curl_init($output['server'] . '/track/' . $input['type']);
+		curl_setopt_array($ch, array(
+			CURLOPT_HEADER                  => false,
+			CURLOPT_RETURNTRANSFER          => true,
+			CURLOPT_POST                    => true,
+			CURLOPT_POSTFIELDS              => array(
+				'appkey' => $output['appkey'],
+				'type' => 'json',
+				'data' => json_encode($data)
+				)
+		));
+		curl_exec($ch);
+		curl_close($ch);
+	}
+//	echo '[' . date('H:i:s') . '] ' . $source . ' ' . $line . PHP_EOL;
+}
+function filter ($line, $type)
+{
+	global $config;
+	$filter = $config['filter'][$type];
+	if ( ! $filter)
+	{
+		return $line;
+	}
+	$pattern = $filter['pattern'];
+	preg_match_all('#<([^>]+)>#', $pattern, $matches, PREG_SET_ORDER);
+	$keys = array();
+	foreach ($matches as $i => $match)
+	{
+		$keys[$i] = $match[1];
+		$pattern = str_replace($match[0], '(' . $filter['values'][$match[1]] . ')', $pattern);
+	}
+	preg_match_all('#' . $pattern . '#', $line, $matches, PREG_SET_ORDER);
+	$vars = array();
+	foreach ($matches[0] as $i => $match)
+	{
+		if ($i > 0)
+		{
+			$vars[$keys[$i - 1]] = $match;
+		}
+	}
+	$data = array();
+	foreach ($filter['data'] as $key => $val)
+	{
+		preg_match_all('/\$[a-zA-Z0-9]+/', $val, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match)
+		{
+//			print_r($match);
+			$val = str_replace($match[0], $vars[$key], $val);
+		}
+		$data[$key] = $val;
+	}
+	return array(
+		'raw' => $line
+	) + $data;
+}
+
+// Get handles to inputs
+$input_handles = array();
+function setup_file_handles ()
+{
+	global $input_handles, $config;
+	foreach ($config['input'] as $input)
+	{
+		$filename = $input['source'];
+		$filehash = md5($filename);
+		if (file_exists($filename))
+		{
+//			echo 'Listening to ' . $filename . PHP_EOL;
+			$handle = fopen($filename, 'r');
+			fseek($handle, -1, SEEK_END);
+			$position = ftell($handle);
+			$input_handles[$filehash] = array(
+				'handle'       => $handle,
+				'position'     => $position
+			);
+		}
+	}
+}
+$count = 0;
+while (true) {
+
+	if ($count % 60 === 0) setup_file_handles();
+
+	$count++;
+
+	foreach ($config['input'] as $input)
+	{
+
+		$filename = $input['source'];
+		$filehash = md5($filename);
+		$file = $input_handles[$filehash];
+		if ( ! $file)
+		{
+			continue;
+		}
+		fseek($file['handle'], $file['position']);
+		while ($line = fgets($file['handle']))
+		{
+			$line = trim($line);
+			if ($line)
+			{
+				out($input, $line);
+			}
+		}
+		$position = ftell($file['handle']);
+		$input_handles[$filehash]['position'] = $position;
+	}
+	sleep(1);
+
+}
