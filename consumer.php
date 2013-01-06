@@ -28,5 +28,9 @@ $config = json_decode($file, true);
 // Initialize Instance of Hoardtail
 include __DIR__ . '/lib/HoardTail.php';
 $client = new HoardTail();
+if (isset($params['log_level']))
+{
+	$client->setLogLevel($params['log_level']);
+}
 $client->loadConfig($config);
 $client->listen();

@@ -33,6 +33,15 @@ class HoardTail {
 
 
 	/**
+	 * Set log level
+	 */
+	public function setLogLevel ($log_level)
+	{
+		$this->log_level = $log_level;
+	}
+
+
+	/**
 	 * Output Data
 	 */
 	private function publish ($input, $line)
@@ -271,9 +280,9 @@ class HoardTail {
 	/**
 	 * Logging
 	 */
-	private function log ($line, $level = 1)
+	private function log ($line, $log_level = 1)
 	{
-		if ($level & $this->log_level)
+		if ($log_level & $this->log_level)
 		{
 			echo "\033[32m[" . date('m/d-H:i:s') . "]\033[0m "  . $line . PHP_EOL;
 		}
