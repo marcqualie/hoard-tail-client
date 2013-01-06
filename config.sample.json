@@ -1,0 +1,22 @@
+{
+	"input": [
+		{
+			"filters": ["apache-access-combined"],
+			"source": "/var/log/apache2/access_log",
+			"data": {
+				"host": "example.com"
+			}
+		},
+		{
+			"source": "/var/log/nginx/access.log",
+		}
+	],
+	"output": [
+		{
+			"type": "hoard",
+			"server": "",
+			"appkey": "",
+			"secret": ""
+		}
+	]
+}

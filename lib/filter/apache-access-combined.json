@@ -1,0 +1,16 @@
+{
+	"type": "regex",
+	"pattern": "<ipv4> - <user> <time> \"<method> <uri> HTTP\/<httpversion>\" <status> <size> \"<referer>\" \"<useragent>\"",
+	"values": {
+		"ipv4": "[\\S]+",
+		"user": "[\\S]+",
+		"time": "\\[[^\\]]+\\]",
+		"method": "[a-zA-Z]+",
+		"uri": "[\\S]+",
+		"httpversion": "[0-9.]+",
+		"status": "[0-9]+",
+		"size": "[0-9-]+",
+		"referer": "[^\"]+",
+		"useragent": "[^\"]+"
+	}
+}

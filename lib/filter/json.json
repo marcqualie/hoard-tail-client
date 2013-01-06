@@ -1,0 +1,7 @@
+{
+	"type": "function",
+	"name": "json_decode",
+	"data": {
+		"@event": "$status"
+	}
+}
