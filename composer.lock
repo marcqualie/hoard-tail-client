@@ -1,0 +1,71 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "4601137acc3aebdc1c3dc0c16cc4883d",
+    "packages": [
+        {
+            "name": "marcqualie/hoard",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcqualie/hoard-php-client.git",
+                "reference": "80661a43671097441f1f555265aa58acee5ff0fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcqualie/hoard-php-client/zipball/80661a43671097441f1f555265aa58acee5ff0fe",
+                "reference": "80661a43671097441f1f555265aa58acee5ff0fe",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Qualie",
+                    "email": "hoard@marcqualie.com",
+                    "homepage": "http://marcqualie.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Hoard client library for PHP",
+            "homepage": "http://github.com/marcqualie/hoard-php-client",
+            "keywords": [
+                "analytics",
+                "log",
+                "logging",
+                "mongodb",
+                "stats"
+            ],
+            "time": "2013-06-28 14:13:30"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "marcqualie/hoard": 20
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}

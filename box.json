@@ -1,0 +1,10 @@
+{
+    "chmod": "0775",
+    "directories": [
+        "lib",
+        "vendor"
+    ],
+    "main": "bin/hoardtail",
+    "output": "hoardtail.phar",
+    "stub": true
+}
