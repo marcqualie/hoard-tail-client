@@ -1,5 +1,11 @@
 {
     "require": {
-        "marcqualie/hoard": "dev-master"
+        "marcqualie/hoard": "dev-master",
+        "symfony/console": "~2.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "Hoard\\Tail": "lib"
+        }
     }
 }

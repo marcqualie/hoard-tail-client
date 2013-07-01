@@ -2,9 +2,29 @@
     "chmod": "0775",
     "directories": [
         "lib",
-        "vendor"
+        "vendor/composer"
+    ],
+    "files": [
+        "vendor/autoload.php"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": [
+                "test"
+            ],
+            "in": "vendor/marcqualie"
+        },
+        {
+            "name": "*.php",
+            "exclude": [
+                "Tests"
+            ],
+            "in": "vendor/symfony"
+        }
     ],
     "main": "bin/hoardtail",
     "output": "hoardtail.phar",
+    "compression": "GZ",
     "stub": true
 }
